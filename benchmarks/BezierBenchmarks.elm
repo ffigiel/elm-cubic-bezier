@@ -1,11 +1,12 @@
 module BezierBenchmarks exposing (main)
 
 import Benchmark as B exposing (Benchmark)
-import Benchmark.Runner exposing (BenchmarkProgram, program)
+import Benchmark.Alternative as BA
+import Benchmark.Runner.Alternative exposing (Program, program)
 import Bezier
 
 
-main : BenchmarkProgram
+main : Program
 main =
     program suite
 
@@ -18,21 +19,20 @@ suite =
                 |> List.map (\i -> toFloat i / 100)
     in
     B.describe "Bezier"
-        [ B.describe "point"
-            [ B.benchmark "bezierPointSimple" <|
-                \_ -> List.map (Bezier.bezierPointSimple 0.1 1 0.5 0.2) times
-            , B.benchmark "bezierPointAdvancedOriginal" <|
-                \_ -> List.map (Bezier.bezierPointAdvancedOriginal 0.1 1 0.5 0.2) times
-            , B.benchmark "bezierPointAdvancedOptimized" <|
-                \_ -> List.map (Bezier.bezierPointAdvancedOptimized 0.1 1 0.5 0.2) times
+        [ BA.rank "point"
+            (\f -> List.map f times)
+            [ ( "bezierPointSimple", Bezier.bezierPointSimple 0.1 1 0.5 0.2 )
+            , ( "bezierPointAdvancedOriginal", Bezier.bezierPointAdvancedOriginal 0.1 1 0.5 0.2 )
+            , ( "bezierPointAdvancedOptimized", Bezier.bezierPointAdvancedOptimized 0.1 1 0.5 0.2 )
             ]
-        , B.describe "easing"
-            (easingBenchmarks times)
+        , BA.rank "easing"
+            (\f -> List.map f times)
+            easingBenchmarks
         ]
 
 
-easingBenchmarks : List Float -> List Benchmark
-easingBenchmarks times =
+easingBenchmarks : List ( String, Float -> Float )
+easingBenchmarks =
     [ ( "bezierBinFixed", Bezier.bezierBinFixed 0.1 1 0.5 0.2 )
     , ( "bezierBinEpsilon", Bezier.bezierBinEpsilon 0.1 1 0.5 0.2 )
     , ( "bezierBinHybrid", Bezier.bezierBinHybrid 0.1 1 0.5 0.2 )
@@ -49,8 +49,7 @@ easingBenchmarks times =
                     label =
                         funcName ++ " (" ++ String.fromFloat fitPercent ++ "% accuracy)"
                 in
-                B.benchmark label
-                    (\_ -> List.map f times)
+                ( label, f )
             )
 
 
