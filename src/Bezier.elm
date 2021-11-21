@@ -23,6 +23,9 @@ bezierBinFixed x1 y1 x2 y2 =
     let
         precision =
             8
+
+        f =
+            bezierPointSimple x1 y1 x2 y2
     in
     \time ->
         if time == 0 then
@@ -32,35 +35,31 @@ bezierBinFixed x1 y1 x2 y2 =
             1
 
         else
-            List.range 0 precision
-                |> List.foldl
-                    (\_ q ->
-                        let
-                            ( minX, maxX ) =
-                                q.range
+            bezierBinFixedHelper precision f time ( 0, 1 )
 
-                            pivot =
-                                (minX + maxX) / 2
 
-                            ( x, y ) =
-                                bezierPointSimple x1 y1 x2 y2 pivot
-                        in
-                        if x == time then
-                            { q | value = y }
+bezierBinFixedHelper : Int -> (Float -> ( Float, Float )) -> Float -> ( Float, Float ) -> Float
+bezierBinFixedHelper steps f t ( tMin, tMax ) =
+    let
+        tMid =
+            (tMin + tMax) / 2
 
-                        else
-                            let
-                                newRange =
-                                    if x < time then
-                                        ( pivot, maxX )
+        ( x, y ) =
+            f tMid
+    in
+    if steps == 0 || x == t then
+        y
 
-                                    else
-                                        ( minX, pivot )
-                            in
-                            { q | range = newRange, value = y }
-                    )
-                    { range = ( 0, 1 ), value = 0 }
-                |> (\c -> c.value)
+    else
+        let
+            newRange =
+                if x < t then
+                    ( tMid, tMax )
+
+                else
+                    ( tMin, tMid )
+        in
+        bezierBinFixedHelper (steps - 1) f t newRange
 
 
 {-| Binary search with a fixed precision
