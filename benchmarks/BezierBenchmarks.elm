@@ -36,6 +36,7 @@ easingBenchmarks : List Float -> List Benchmark
 easingBenchmarks times =
     [ ("bezierBinFixed", Bezier.bezierBinFixed 0.1 1 0.5 0.2)
     , ("bezierBinEpsilon", Bezier.bezierBinEpsilon 0.1 1 0.5 0.2)
+    , ("bezierBinHybrid", Bezier.bezierBinHybrid 0.1 1 0.5 0.2)
     ]
     |> List.map (\(funcName, f) ->
         let

@@ -3,6 +3,7 @@ module Bezier exposing
     , BezierPointFunc
     , bezierBinEpsilon
     , bezierBinFixed
+    , bezierBinHybrid
     , bezierPoint
     , bezierPointAdvancedOptimized
     , bezierPointAdvancedOriginal
@@ -109,6 +110,49 @@ bezierBinEpsilonHelper f t ( tMin, tMax ) =
                     ( tMin, tMid )
         in
         bezierBinEpsilonHelper f t newRange
+
+
+{-| A combination of bezierBinFixed and bezierBinEpsilon
+-}
+bezierBinHybrid : BezierEasingFunc
+bezierBinHybrid x1 y1 x2 y2 =
+    let
+        f =
+            bezierPoint x1 y1 x2 y2
+    in
+    \time ->
+        if time == 0 then
+            0
+
+        else if time == 1 then
+            1
+
+        else
+            bezierBinHybridHelper fixedSteps f time ( 0, 1 )
+
+
+bezierBinHybridHelper : Int -> (Float -> ( Float, Float )) -> Float -> ( Float, Float ) -> Float
+bezierBinHybridHelper steps f t ( tMin, tMax ) =
+    let
+        tMid =
+            (tMin + tMax) / 2
+
+        ( x, y ) =
+            f tMid
+    in
+    if steps == 0 || abs (t - x) < epsilon then
+        y
+
+    else
+        let
+            newRange =
+                if x < t then
+                    ( tMid, tMax )
+
+                else
+                    ( tMin, tMid )
+        in
+        bezierBinFixedHelper (steps - 1) f t newRange
 
 
 
