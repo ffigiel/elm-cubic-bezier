@@ -152,7 +152,7 @@ bezierBinHybridHelper steps f t ( tMin, tMax ) =
                 else
                     ( tMin, tMid )
         in
-        bezierBinFixedHelper (steps - 1) f t newRange
+        bezierBinHybridHelper (steps - 1) f t newRange
 
 
 
