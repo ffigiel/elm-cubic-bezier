@@ -21,9 +21,6 @@ type alias BezierEasingFunc =
 bezierBinFixed : BezierEasingFunc
 bezierBinFixed x1 y1 x2 y2 =
     let
-        precision =
-            8
-
         f =
             bezierPoint x1 y1 x2 y2
     in
@@ -35,7 +32,12 @@ bezierBinFixed x1 y1 x2 y2 =
             1
 
         else
-            bezierBinFixedHelper precision f time ( 0, 1 )
+            bezierBinFixedHelper fixedSteps f time ( 0, 1 )
+
+
+fixedSteps : number
+fixedSteps =
+    8
 
 
 bezierBinFixedHelper : Int -> (Float -> ( Float, Float )) -> Float -> ( Float, Float ) -> Float
@@ -81,8 +83,9 @@ bezierBinEpsilon x1 y1 x2 y2 =
             bezierBinEpsilonHelper func time ( 0, 1 )
 
 
+epsilon : Float
 epsilon =
-    0.0005
+    0.00075
 
 
 bezierBinEpsilonHelper f t ( tMin, tMax ) =
