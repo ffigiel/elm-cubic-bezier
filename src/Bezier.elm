@@ -25,7 +25,7 @@ bezierBinFixed x1 y1 x2 y2 =
             8
 
         f =
-            bezierPointSimple x1 y1 x2 y2
+            bezierPoint x1 y1 x2 y2
     in
     \time ->
         if time == 0 then
@@ -68,7 +68,7 @@ bezierBinEpsilon : BezierEasingFunc
 bezierBinEpsilon x1 y1 x2 y2 =
     let
         func =
-            bezierPointSimple x1 y1 x2 y2
+            bezierPoint x1 y1 x2 y2
     in
     \time ->
         if time == 0 then
