@@ -55,8 +55,8 @@ measureFit : (Float -> Float) -> Float
 measureFit f =
     let
         times =
-            List.range 0 10000
-                |> List.map (\i -> (toFloat i) / 10000)
+            List.range 0 1000000
+                |> List.map (\i -> (toFloat i) / 1000000)
 
         scores =
             times |> List.map
