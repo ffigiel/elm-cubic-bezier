@@ -40,21 +40,21 @@ easingBenchmarks =
         |> List.map
             (\( funcName, f ) ->
                 let
-                    fit =
-                        measureFit f
+                    acc =
+                        measureAccuracy f
 
-                    fitPercent =
-                        toFloat (round (fit * 10000)) / 100
+                    accPercent =
+                        toFloat (round (acc * 10000)) / 100
 
                     label =
-                        funcName ++ " (" ++ String.fromFloat fitPercent ++ "% accuracy)"
+                        funcName ++ " (" ++ String.fromFloat accPercent ++ "% accuracy)"
                 in
                 ( label, f )
             )
 
 
-measureFit : (Float -> Float) -> Float
-measureFit f =
+measureAccuracy : (Float -> Float) -> Float
+measureAccuracy f =
     let
         times =
             List.range 0 1000000
