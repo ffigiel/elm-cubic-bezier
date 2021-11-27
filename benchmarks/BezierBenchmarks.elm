@@ -19,15 +19,31 @@ suite =
                 |> List.map (\i -> toFloat i / 100)
     in
     B.describe "Bezier"
-        [ BA.rank "point"
+        [ BA.rank "point (cached)"
             (\f -> List.map f times)
             [ ( "bezierPointSimple", Bezier.bezierPointSimple 0.1 1 0.5 0.2 )
             , ( "bezierPointAdvancedOriginal", Bezier.bezierPointAdvancedOriginal 0.1 1 0.5 0.2 )
             , ( "bezierPointAdvancedOptimized", Bezier.bezierPointAdvancedOptimized 0.1 1 0.5 0.2 )
             ]
-        , BA.rank "easing"
+        , BA.rank "point (cold)"
+            (\f ->
+                List.map (\t -> f 0.1 1 0.5 0.2 t) times
+            )
+            [ ( "bezierPointSimple", Bezier.bezierPointSimple )
+            , ( "bezierPointAdvancedOriginal", Bezier.bezierPointAdvancedOriginal )
+            , ( "bezierPointAdvancedOptimized", Bezier.bezierPointAdvancedOptimized )
+            ]
+        , BA.rank "easing (cached)"
             (\f -> List.map f times)
             easingBenchmarks
+        , BA.rank "easing (cold)"
+            (\f ->
+                List.map (\t -> f 0.1 1 0.5 0.2 t) times
+            )
+            [ ( "bezierBinFixed", Bezier.bezierBinFixed )
+            , ( "bezierBinEpsilon", Bezier.bezierBinEpsilon )
+            , ( "bezierBinHybrid", Bezier.bezierBinHybrid )
+            ]
         ]
 
 
