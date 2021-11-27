@@ -57,8 +57,8 @@ measureAccuracy : (Float -> Float) -> Float
 measureAccuracy f =
     let
         times =
-            List.range 0 1000000
-                |> List.map (\i -> toFloat i / 1000000)
+            List.range 0 10000
+                |> List.map (\i -> toFloat i / 10000)
 
         scores =
             times
@@ -70,12 +70,18 @@ measureAccuracy f =
 
                             yActual =
                                 f x
+
+                            diff =
+                                abs (yExpected - yActual)
+
+                            range =
+                                max diff (abs yExpected)
                         in
-                        if yActual == yExpected then
+                        if diff == 0 then
                             1
 
                         else
-                            1 - (abs (yExpected - yActual) / yExpected)
+                            1 - (diff / range)
                     )
 
         sum =
