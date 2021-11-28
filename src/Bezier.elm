@@ -26,14 +26,7 @@ bezierBinFixed x1 y1 x2 y2 =
             bezierPoint x1 y1 x2 y2
     in
     \time ->
-        if time == 0 then
-            0
-
-        else if time == 1 then
-            1
-
-        else
-            bezierBinFixedHelper fixedSteps f time ( 0, 1 )
+        bezierBinFixedHelper fixedSteps f time ( 0, 1 )
 
 
 fixedSteps : number
@@ -50,7 +43,7 @@ bezierBinFixedHelper steps f t ( tMin, tMax ) =
         ( x, y ) =
             f tMid
     in
-    if steps == 0 || x == t then
+    if steps == 0 then
         y
 
     else
@@ -74,14 +67,7 @@ bezierBinEpsilon x1 y1 x2 y2 =
             bezierPoint x1 y1 x2 y2
     in
     \time ->
-        if time == 0 then
-            0
-
-        else if time == 1 then
-            1
-
-        else
-            bezierBinEpsilonHelper func time ( 0, 1 )
+        bezierBinEpsilonHelper func time ( 0, 1 )
 
 
 epsilon : Float
@@ -121,14 +107,7 @@ bezierBinHybrid x1 y1 x2 y2 =
             bezierPoint x1 y1 x2 y2
     in
     \time ->
-        if time == 0 then
-            0
-
-        else if time == 1 then
-            1
-
-        else
-            bezierBinHybridHelper fixedSteps f time ( 0, 1 )
+        bezierBinHybridHelper fixedSteps f time ( 0, 1 )
 
 
 bezierBinHybridHelper : Int -> (Float -> ( Float, Float )) -> Float -> ( Float, Float ) -> Float
